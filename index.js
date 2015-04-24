@@ -75,7 +75,7 @@ lx.on('gateway', function (gateway) {
   lifx.setDebug(false);
 
   // Start server
-  server.listen(8000, function () {
+  server.listen(80, function () {
     console.log('Listening at %s', server.url);
   });
 });
