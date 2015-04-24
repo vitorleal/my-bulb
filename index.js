@@ -4,6 +4,13 @@ var restify = require('restify'),
     server  = restify.createServer(),
     bulbStatus = false;
 
+
+// Turn on the light
+server.get('/status', function(req, res, next) {
+  res.send({ on: bulbStatus });
+  next();
+});
+
 // Turn on the light
 server.get('/on', function(req, res, next) {
   lx.lightsOn();
