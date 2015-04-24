@@ -53,7 +53,7 @@ lx.on('gateway', function (gateway) {
   lifx.setDebug(false);
 
   // Start server
-  server.listen(8000, function () {
+  server.listen(80, function () {
     console.log('Listening at %s', server.url);
 
     lx.lightsColour(0x0000, 0x9000, 0x4000, 0x0af0, 0x0513);
