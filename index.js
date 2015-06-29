@@ -1,71 +1,41 @@
-var restify = require('restify'),
-    lifx    = require('lifx'),
-    lx      = lifx.init(),
-    helpers = require('./helpers'),
-    server  = restify.createServer(),
-    bulbStatus = false;
+var express    = require('express'),
+    bodyParser = require('body-parser'),
+    bulb       = require('./lib/Bulb')(),
+    server     = express();
 
-// Turn on the light
-server.get('/status', function(req, res, next) {
-  res.send({ on: bulbStatus });
-  next();
+
+// On bulbs ready
+bulb.on('ready', function () {
+  server.listen(process.env.PORT || 3000);
+  bulb.changeColor('red');
+  bulb.blink();
 });
 
-// Turn on the light
-server.get('/on', function(req, res, next) {
-  // lx.lightsColour(hue, saturation, luminance, whiteColour, fadeTime);
-  lx.lightsColour(0x0000, 0x0000, 0x8000, 0x0af0, 0x0513);
-  lx.lightsOn();
-
-  bulbStatus = true;
-
-  res.send({ on: bulbStatus });
-  next();
-});
-
-// Turn off the light
-server.get('/off', function(req, res, next) {
-  lx.lightsOff();
-  bulbStatus = false;
-
-  res.send({ on: bulbStatus });
-  next();
-});
-
-// Blink the light
-server.get('/blink', function(req, res, next) {
-  helpers.blink(lx);
-
-  bulbStatus = false;
-
-  res.send({ blink: true });
-  next();
-});
-
-console.log('Waiting for gateway...');
-
-// Find Lifx gateway
-lx.on('gateway', function(gateway) {
-  console.log('New gateway found: ' + gateway.ip);
-
-  lifx.setDebug(false);
-
-  // Start server
-  server.listen(80, function() {
-    console.log('Listening at %s', server.url);
-
-    lx.lightsColour(0x0000, 0x9000, 0x4000, 0x0af0, 0x0513);
-    helpers.blink(lx);
+// Server routes
+server.get('/status', function (req, res) {
+  res.send({
+    on: bulb.status
   });
 });
 
-// Log the Lifx bulb
-lx.on('bulb', function(bulb) {
-  console.log('New bulb found: ' + bulb.name);
+server.get('/on', function (req, res) {
+  bulb.turnOn();
+  res.send({
+    on: bulb.status
+  });
 });
 
-// On server error
-server.on('error', function(error) {
-  console.log('Error: %s', error);
+server.get('/off', function (req, res) {
+  bulb.turnOff();
+  res.send({
+    on: bulb.status
+  });
+});
+
+server.get('/blink', function (req, res) {
+  bulb.blink();
+  res.send({
+    on: bulb.status
+  });
 });
 
