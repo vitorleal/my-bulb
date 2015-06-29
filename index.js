@@ -5,7 +5,6 @@ var restify = require('restify'),
     server  = restify.createServer(),
     bulbStatus = false;
 
-
 // Turn on the light
 server.get('/status', function(req, res, next) {
   res.send({ on: bulbStatus });
@@ -43,17 +42,16 @@ server.get('/blink', function(req, res, next) {
   next();
 });
 
-
 console.log('Waiting for gateway...');
 
 // Find Lifx gateway
-lx.on('gateway', function (gateway) {
+lx.on('gateway', function(gateway) {
   console.log('New gateway found: ' + gateway.ip);
 
   lifx.setDebug(false);
 
   // Start server
-  server.listen(80, function () {
+  server.listen(80, function() {
     console.log('Listening at %s', server.url);
 
     lx.lightsColour(0x0000, 0x9000, 0x4000, 0x0af0, 0x0513);
@@ -62,12 +60,12 @@ lx.on('gateway', function (gateway) {
 });
 
 // Log the Lifx bulb
-lx.on('bulb', function (bulb) {
+lx.on('bulb', function(bulb) {
   console.log('New bulb found: ' + bulb.name);
 });
 
 // On server error
-server.on('error', function (error) {
+server.on('error', function(error) {
   console.log('Error: %s', error);
 });
 
