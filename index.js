@@ -1,6 +1,6 @@
 var express    = require('express'),
     bodyParser = require('body-parser'),
-    bulb       = require('./lib/Bulb')(),
+    bulb       = require('./lib/bulb')(),
     server     = express();
 
 
