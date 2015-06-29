@@ -1,0 +1,11 @@
+[Unit]
+Description=My Bulb service
+After=mdns.service
+
+[Service]
+ExecStart=/bin/su root -c 'PORT=80 node /home/root/my-bulb/index.js'
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=default.target
